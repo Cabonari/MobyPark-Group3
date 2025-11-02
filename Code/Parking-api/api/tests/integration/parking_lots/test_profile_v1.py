@@ -1,0 +1,57 @@
+import pytest
+import requests
+import hashlib
+
+@pytest.fixture
+def api():
+    """Return base URL and headers for testing."""
+    url = "http://localhost:8000"
+    headers = {"Authorization": "abc123", "Content-Type": "application/json"}
+    return url, headers
+
+@pytest.fixture
+def test_profile(api):
+    """Return the initial test profile data (from session)."""
+    url, headers = api
+    r = requests.get(f"{url}/profile", headers=headers)
+    assert r.status_code == 200
+    return r.json()
+
+def test_get_profile(api, test_profile):
+    """Test fetching the profile."""
+    url, headers = api
+    r = requests.get(f"{url}/profile", headers=headers)
+    assert r.status_code == 200
+    data = r.json()
+    assert data["username"] == test_profile["username"]
+    assert data["role"] == test_profile["role"]
+
+def test_update_profile(api, test_profile):
+    """Test updating the profile (change name and password)."""
+    url, headers = api
+    new_name = "Updated Test User"
+    new_password = "newpassword123"
+    payload = {
+        "name": new_name,
+        "password": new_password
+    }
+    r = requests.put(f"{url}/profile", headers=headers, json=payload)
+    assert r.status_code == 200
+    assert r.text == "User updated succesfully"
+
+    # Fetch profile again to verify name updated
+    r2 = requests.get(f"{url}/profile", headers=headers)
+    assert r2.status_code == 200
+    data = r2.json()
+    assert data["name"] == new_name
+
+    # Optional: reset password to original (since test modifies state)
+    payload_reset = {"name": data["name"], "password": "test"}  # replace with original if needed
+    requests.put(f"{url}/profile", headers=headers, json=payload_reset)
+
+def test_get_profile_unauthorized():
+    """Test fetching profile without authorization."""
+    url = "http://localhost:8000"
+    headers = {"Content-Type": "application/json"}  # no Authorization
+    r = requests.get(f"{url}/profile", headers=headers)
+    assert r.status_code == 401
