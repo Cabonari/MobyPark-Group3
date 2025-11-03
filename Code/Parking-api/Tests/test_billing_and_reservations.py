@@ -2,10 +2,6 @@ import pytest
 import requests
 from datetime import datetime, timedelta
 
-# -----------------------
-# 🔧 Fixtures
-# -----------------------
-
 
 @pytest.fixture
 def api():
