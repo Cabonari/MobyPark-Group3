@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - main
+      - CI/CD-pipeline
   pull_request:
     branches:
       - main
+      - CI/CD-pipeline
 jobs:
   test:
     runs-on: ubuntu-latest
