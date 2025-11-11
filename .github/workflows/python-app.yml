@@ -34,7 +34,7 @@ jobs:
         pip --version
     - name: Start server.py for testing
       run: |
-        python server.py
+        python Code/Parking-api/api/server.py
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
