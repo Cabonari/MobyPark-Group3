@@ -31,7 +31,17 @@ jobs:
         run: |
           nohup python Code/Parking-api/api/server.py > server.log 2>&1 &
           sleep 3
+      
+      - name: Start API server
+        run: uvicorn main:app --host 0.0.0.0 --port 8000 &
 
+      - name: Wait for API server
+        run: |
+          for i in {1..10}; do
+            curl http://localhost:8000/ && break
+            sleep 2
+          done
+  
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
