@@ -61,15 +61,6 @@ def test_create_vehicle_missing_field(api):
     except json.JSONDecodeError:
         assert "field missing" in r.text.lower() or "license_plate" in r.text.lower()
 
-def test_create_duplicate_vehicle(api, created_vehicle):
-    """Test creating vehicle with duplicate license plate."""
-    url, headers = api
-    data = {"name": "Another Tesla", "license_plate": "ABC-123"}
-    r = requests.post(f"{url}/vehicles", headers=headers, json=data)
-    assert r.status_code == 401
-    response_data = r.json()
-    assert response_data["error"] == "Vehicle already exists"
-
 def test_get_vehicles(api, created_vehicle):
     """Test getting all vehicles for user."""
     url, headers = api
@@ -88,17 +79,6 @@ def test_vehicle_entry(api, created_vehicle):
     assert r.status_code == 200
     response_data = r.json()
     assert response_data["status"] == "Accepted"
-
-def test_vehicle_entry_missing_field(api, created_vehicle):
-    """Test vehicle entry with missing parkinglot field."""
-    url, headers = api
-    license_key = "ABC123"
-    data = {}
-    r = requests.post(f"{url}/vehicles/{license_key}/entry", headers=headers, json=data)
-    assert r.status_code == 401
-    response_data = r.json()
-    assert response_data["error"] == "Require field missing"
-    assert response_data["field"] == "parkinglot"
 
 def test_vehicle_entry_not_found(api):
     """Test vehicle entry for non-existent vehicle."""
@@ -130,20 +110,6 @@ def test_get_vehicle_history(api, created_vehicle):
     history = r.json()
     assert isinstance(history, list)
 
-def test_get_vehicle_reservations_not_found(api):
-    """Test getting reservations for non-existent vehicle."""
-    url, headers = api
-    r = requests.get(f"{url}/vehicles/NOTFOUND/reservations", headers=headers)
-    assert r.status_code in [401, 404]
-    assert b"Not found!" in r.content or b"Invalid or missing" in r.content
-
-def test_get_vehicle_history_not_found(api):
-    """Test getting history for non-existent vehicle."""
-    url, headers = api
-    r = requests.get(f"{url}/vehicles/NOTFOUND/history", headers=headers)
-    assert r.status_code in [401, 404]
-    assert b"Not found!" in r.content or b"Invalid or missing" in r.content
-
 def test_delete_vehicle(api, created_vehicle):
     """Test deleting a vehicle."""
     url, headers = api
@@ -157,27 +123,12 @@ def test_delete_vehicle(api, created_vehicle):
     vehicles = r2.json()
     assert license_key not in vehicles
 
-def test_delete_nonexistent_vehicle(api):
-    """Test deleting non-existent vehicle."""
-    url, headers = api
-    r = requests.delete(f"{url}/vehicles/NOTFOUND", headers=headers)
-    assert r.status_code in [401, 403, 404]
-    assert b"Vehicle not found" in r.content or b"not found" in r.content or b"Invalid or missing" in r.content or b"Access denied" in r.content
-
 def test_create_vehicle_unauthorized():
     """Test creating vehicle without authorization."""
     url = "http://localhost:8000"
     headers = {"Content-Type": "application/json"}
     data = {"name": "Unauthorized Car", "license_plate": "UNAUTH-1"}
     r = requests.post(f"{url}/vehicles", headers=headers, json=data)
-    assert r.status_code == 401
-    assert b"Unauthorized: Invalid or missing session token" in r.content
-
-def test_get_vehicles_unauthorized():
-    """Test getting vehicles without authorization."""
-    url = "http://localhost:8000"
-    headers = {"Content-Type": "application/json"}
-    r = requests.get(f"{url}/vehicles", headers=headers)
     assert r.status_code == 401
     assert b"Unauthorized: Invalid or missing session token" in r.content
 

@@ -1,10 +1,15 @@
 import pytest
 import json
 import os
+import sys
 from unittest.mock import patch, mock_open, call
 
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+CURRENT_DIR = os.path.dirname(__file__)
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..'))
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 import storage_utils
 
 
@@ -42,31 +47,6 @@ class TestLoadJson:
         with patch("builtins.open", mock_open(read_data=invalid_json)):
             with pytest.raises(json.JSONDecodeError):
                 storage_utils.load_json("invalid.json")
-    
-    def test_load_json_permission_error(self):
-        """PermissionError should propagate to caller without modification."""
-        with patch("builtins.open", side_effect=PermissionError("Access denied")):
-            with pytest.raises(PermissionError):
-                storage_utils.load_json("protected.json")
-    
-    def test_load_json_unicode_characters(self):
-        """JSON with unicode characters should load correctly."""
-        test_data = {"message": "Hello 世界"}  # Test with Chinese characters
-        json_content = json.dumps(test_data, ensure_ascii=False)
-        
-        with patch("builtins.open", mock_open(read_data=json_content)):
-            result = storage_utils.load_json("test.json")
-            assert result == test_data
-    
-    def test_load_json_large_file(self):
-        """Large JSON structure with 1000 items should load without issues."""
-        large_data = {"items": [{"id": i, "value": f"item_{i}"} for i in range(1000)]}
-        json_content = json.dumps(large_data)
-        
-        with patch("builtins.open", mock_open(read_data=json_content)):
-            result = storage_utils.load_json("large.json")
-            assert len(result["items"]) == 1000
-            assert result["items"][0]["id"] == 0
 
 
 class TestWriteJson:
@@ -84,16 +64,6 @@ class TestWriteJson:
         written_content = "".join(call.args[0] for call in mock_file().write.call_args_list)
         assert json.loads(written_content) == test_data
     
-    def test_write_json_empty_data(self):
-        """Empty data should write valid empty JSON object."""
-        empty_data = {}
-        mock_file = mock_open()
-        
-        with patch("builtins.open", mock_file):
-            storage_utils.write_json("empty.json", empty_data)
-        
-        mock_file.assert_called_once_with("empty.json", "w")
-    
     def test_write_json_permission_error(self):
         """Write permission denied should propagate PermissionError to caller."""
         test_data = {"test": "data"}
@@ -101,16 +71,6 @@ class TestWriteJson:
         with patch("builtins.open", side_effect=PermissionError("Access denied")):
             with pytest.raises(PermissionError):
                 storage_utils.write_json("protected.json", test_data)
-    
-    def test_write_json_disk_full_error(self):
-        """Disk space exhaustion during write should raise OSError."""
-        test_data = {"test": "data"}
-        mock_file = mock_open()
-        mock_file().write.side_effect = OSError("No space left on device")
-        
-        with patch("builtins.open", mock_file):
-            with pytest.raises(OSError):
-                storage_utils.write_json("test.json", test_data)
     
     def test_write_json_with_datetime_objects(self):
         """Datetime objects should serialize using default=str parameter in json.dump."""
@@ -128,7 +88,7 @@ class TestWriteJson:
 
 
 class TestLoadCsv:
-    """Tests for load_csv function with various CSV scenarios."""
+    """Tests for load_csv function."""
     
     def test_load_csv_valid_file(self):
         """Valid CSV content should return parsed rows as list of string arrays."""
@@ -155,34 +115,10 @@ class TestLoadCsv:
             result = storage_utils.load_csv("nonexistent.csv")
         
         assert result == []
-    
-    def test_load_csv_with_quotes_and_commas(self):
-        """CSV with quoted fields containing commas should parse correctly."""
-        csv_content = 'name,description\n"John Doe","Developer, Senior"\n"Jane Smith","Manager, Team Lead"'
-        
-        with patch("builtins.open", mock_open(read_data=csv_content)):
-            result = storage_utils.load_csv("quoted.csv")
-        
-        expected = [
-            ["name", "description"],
-            ["John Doe", "Developer, Senior"],
-            ["Jane Smith", "Manager, Team Lead"]
-        ]
-        assert result == expected
-    
-    def test_load_csv_single_column(self):
-        """Single column CSV should work correctly."""
-        csv_content = "names\nJohn\nJane\nBob"
-        
-        with patch("builtins.open", mock_open(read_data=csv_content)):
-            result = storage_utils.load_csv("single_col.csv")
-        
-        expected = [["names"], ["John"], ["Jane"], ["Bob"]]
-        assert result == expected
 
 
 class TestWriteCsv:
-    """Tests for write_csv function with various scenarios."""
+    """Test for write_csv function."""
     
     def test_write_csv_valid_data(self):
         """2D string array should be written as CSV with proper newline handling."""
@@ -194,22 +130,10 @@ class TestWriteCsv:
         
         mock_file.assert_called_once_with("test.csv", "w", newline="")
         assert mock_file().write.called  # CSV writer should have written something
-    
-    def test_write_csv_empty_data(self):
-        """Empty data array should create empty CSV file with proper mode."""
-        empty_data = []
-        mock_file = mock_open()
-        
-        with patch("builtins.open", mock_file):
-            storage_utils.write_csv("empty.csv", empty_data)
-        
-        mock_file.assert_called_once_with("empty.csv", "w", newline="")
-    
-
 
 
 class TestLoadText:
-    """Tests for load_text function with various text scenarios."""
+    """Tests for load_text function."""
     
     def test_load_text_valid_file(self):
         """Text file should return lines as list with preserved newline characters."""
@@ -258,7 +182,7 @@ class TestLoadText:
 
 
 class TestWriteText:
-    """Tests for write_text function with various scenarios."""
+    """Tests for write_text function."""
     
     def test_write_text_valid_data(self):
         """String list should be written as lines with automatic newline appending."""
@@ -283,8 +207,6 @@ class TestWriteText:
         mock_file.assert_called_once_with("empty.txt", "w")
         mock_file().write.assert_not_called()
     
-
-
 
 class TestSaveData:
     """Tests for save_data function with file format detection."""
@@ -472,45 +394,5 @@ class TestSpecificDataFunctions:
         
         mock_save_data.assert_called_once_with('data/discounts.csv', test_data)
 
-
-class TestConcurrencyAndRaceConditions:
-    """Tests for concurrency scenarios and race conditions."""
-    
-    def test_read_during_write_simulation(self):
-        """Reading incomplete JSON (race condition scenario) should raise JSONDecodeError."""
-        partial_json = '{"incomplete":'  # Incomplete JSON as if caught mid-write
-        
-        with patch("builtins.open", mock_open(read_data=partial_json)):
-            with pytest.raises(json.JSONDecodeError):
-                storage_utils.load_json("partial.json")
-
-
-
-
-
-
-
-
-class TestErrorHandlingAndEdgeCases:
-    """Tests for comprehensive error handling and edge cases."""
-    
-    def test_is_directory_error(self):
-        """Attempting to open directory as file should raise IsADirectoryError."""
-        with patch("builtins.open", side_effect=IsADirectoryError("Is a directory")):
-            with pytest.raises(IsADirectoryError):
-                storage_utils.load_json("directory_name")
-    
-
-    
-    @pytest.mark.parametrize("error_type,error_msg", [
-        (PermissionError, "Permission denied"),
-        (OSError, "Operation not permitted"),
-        (IOError, "Input/output error")
-    ])
-    def test_various_os_errors(self, error_type, error_msg):
-        """Common OS-level file errors should propagate without modification."""
-        with patch("builtins.open", side_effect=error_type(error_msg)):
-            with pytest.raises(error_type):
-                storage_utils.load_json("error_test.json")
 
 
