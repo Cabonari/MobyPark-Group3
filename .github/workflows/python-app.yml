@@ -26,6 +26,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest requests
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Start API server
+        run: |
+          nohup python Code/Parking-api/api/server.py &
+          sleep 5  # Wait for server to start
+
+      
+
       - name: Start server in background
         run: |
           nohup python Code/Parking-api/api/server.py > server.log 2>&1 &
