@@ -54,7 +54,12 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
+          nohup python Code/Parking-api/api/server.py &
+          sleep 5  # Wait for server to start
+          requests
           pytest
+          
+          
       - name: Stop server
         if: always()
         run: |
