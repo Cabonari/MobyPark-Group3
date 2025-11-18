@@ -37,14 +37,12 @@ jobs:
         run: |
           nohup python Code/Parking-api/api/server.py > server.log 2>&1 &
           sleep 3
-      
-      - name: Start API server
-        run: uvicorn main:app --host 0.0.0.0 --port 8000 &
+    
 
       - name: Wait for API server
         run: |
           for i in {1..10}; do
-            curl http://localhost:8000/ && break
+            curl http://localhost:8000/
             sleep 2
           done
   
@@ -54,7 +52,6 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          requests
           pytest
           
           
