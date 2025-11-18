@@ -7,7 +7,7 @@ def api():
     url = "http://localhost:8000"
     headers = {"Authorization": "abc123", "Content-Type": "application/json"}
     return url, headers
-
+# extra 
 @pytest.fixture
 def created_parkinglot(api):
     """Create a parking lot for tests and return its ID."""
