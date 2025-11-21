@@ -85,12 +85,9 @@ def test_vehicle_entry_not_found(api):
     url, headers = api
     data = {"parkinglot": "lot123"}
     r = requests.post(f"{url}/vehicles/NOTFOUND/entry", headers=headers, json=data)
-    assert r.status_code == 404
-    try:
-        response_data = r.json()
-        assert response_data["error"] == "Vehicle does not exist"
-    except json.JSONDecodeError:
-        assert "not found" in r.text.lower() or "does not exist" in r.text.lower()
+    response_data = r.json()
+    assert response_data["error"] == "Vehicle does not exist"
+    assert response_data["data"] == "NOTFOUND"
 
 def test_get_vehicle_reservations(api, created_vehicle):
     """Test getting vehicle reservations."""
