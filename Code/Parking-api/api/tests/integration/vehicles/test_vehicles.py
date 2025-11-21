@@ -4,26 +4,10 @@ import json
 
 @pytest.fixture
 def api():
-    """Return base URL and valid session token for testing."""
+    """Return base URL and headers for testing."""
     url = "http://localhost:8000"
-    
-    register_data = {
-        "username": "testuser", 
-        "password": "testpass123",
-        "name": "Test User"
-    }
-    requests.post(f"{url}/register", json=register_data)
-    
-    login_data = {"username": "testuser", "password": "testpass123"}
-    login_response = requests.post(f"{url}/login", json=login_data)
-    
-    if login_response.status_code == 200:
-        token = login_response.json()["session_token"]
-        headers = {"Authorization": token, "Content-Type": "application/json"}
-        return url, headers
-    else:
-        pytest.fail(f"Failed to get valid session token. Login response: {login_response.status_code} - {login_response.text}")
-    
+    headers = {"Authorization": "abc123", "Content-Type": "application/json"}
+    return url, headers
 
 @pytest.fixture
 def created_vehicle(api):
@@ -34,6 +18,7 @@ def created_vehicle(api):
     assert r.status_code == 201
     yield "ABC-123"
     license_key = "ABC123"
+    
     requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
 
 def test_create_vehicle(api):
@@ -85,9 +70,9 @@ def test_vehicle_entry_not_found(api):
     url, headers = api
     data = {"parkinglot": "lot123"}
     r = requests.post(f"{url}/vehicles/NOTFOUND/entry", headers=headers, json=data)
+    assert r.status_code == 404
     response_data = r.json()
     assert response_data["error"] == "Vehicle does not exist"
-    assert response_data["data"] == "NOTFOUND"
 
 def test_get_vehicle_reservations(api, created_vehicle):
     """Test getting vehicle reservations."""

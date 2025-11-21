@@ -250,14 +250,14 @@ class RequestHandler(BaseHTTPRequestHandler):
             uvehicles = vehicles.get(session_user["username"], {})
             for field in ["parkinglot"]:
                 if not field in data:
-                    self.send_response(401)
+                    self.send_response(400)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps({"error": "Require field missing", "field": field}).encode("utf-8"))
                     return
             lid = self.path.replace("/vehicles/", "").replace("/entry", "")
             if lid not in uvehicles:
-                self.send_response(401)
+                self.send_response(404)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": "Vehicle does not exist", "data": lid}).encode("utf-8"))
