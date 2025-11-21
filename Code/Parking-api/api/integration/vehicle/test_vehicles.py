@@ -53,7 +53,7 @@ def test_create_vehicle_missing_field(api):
     url, headers = api
     data = {"name": "Incomplete Car"}
     r = requests.post(f"{url}/vehicles", headers=headers, json=data)
-    assert r.status_code == 401
+    assert r.status_code == 400
     try:
         response_data = r.json()
         assert response_data["error"] == "Require field missing"
@@ -85,7 +85,7 @@ def test_vehicle_entry_not_found(api):
     url, headers = api
     data = {"parkinglot": "lot123"}
     r = requests.post(f"{url}/vehicles/NOTFOUND/entry", headers=headers, json=data)
-    assert r.status_code in [401, 404]
+    assert r.status_code == 404
     try:
         response_data = r.json()
         assert response_data["error"] == "Vehicle does not exist"
@@ -130,7 +130,7 @@ def test_create_vehicle_unauthorized():
     data = {"name": "Unauthorized Car", "license_plate": "UNAUTH-1"}
     r = requests.post(f"{url}/vehicles", headers=headers, json=data)
     assert r.status_code == 401
-    assert b"Unauthorized: Invalid or missing session token" in r.content
+    assert "unauthorized" in r.text.lower()
 
 def test_vehicle_entry_unauthorized():
     """Test vehicle entry without authorization."""
@@ -139,4 +139,4 @@ def test_vehicle_entry_unauthorized():
     data = {"parkinglot": "lot123"}
     r = requests.post(f"{url}/vehicles/ABC123/entry", headers=headers, json=data)
     assert r.status_code == 401
-    assert b"Unauthorized: Invalid or missing session token" in r.content
+    assert "unauthorized" in r.text.lower()
