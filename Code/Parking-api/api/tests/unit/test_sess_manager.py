@@ -17,6 +17,14 @@ def test_add_session():
     assert "token1" in sessions
     assert sessions["token1"]["username"] == "user1"
 
+
+"""def test_add_session():
+    add_session("token1", {"username": "user1"})
+    # Bewuste fout: controleer op een verkeerde gebruikersnaam
+    assert sessions["token1"]["username"] == "WRONG_USERNAME" 
+"""
+
+
 def test_get_session():
     add_session("token2", {"username": "user2"})
     result = get_session("token2")
