@@ -154,6 +154,15 @@ class RequestHandler(BaseHTTPRequestHandler):
                     int(self.headers.get("Content-Length", -1))))
                 parking_lots = load_parking_lot_data()
                 new_lid = str(len(parking_lots) + 1)
+                # Make sure parking_lots is a dictionary, not a list
+                if isinstance(parking_lots, list):
+                    # Convert list to dict if needed
+                    parking_lots_dict = {}
+                    for i, lot in enumerate(parking_lots, 1):
+                        parking_lots_dict[str(i)] = lot
+                    parking_lots = parking_lots_dict
+                    save_parking_lot_data(parking_lots)
+
                 parking_lots[new_lid] = data
                 save_parking_lot_data(parking_lots)
                 self.send_response(201)

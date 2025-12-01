@@ -79,11 +79,8 @@ def test_delete_parkinglot(api, created_parkinglot):
 def test_get_nonexistent_parkinglot(api):
     url, headers = api
     r = requests.get(f"{url}/parking-lots/999", headers=headers)
-    # The server currently returns 200 with all lots if ID not found
-    assert r.status_code == 200
-    data = r.json()
-    # It should not contain a lot with ID "999"
-    assert "999" not in data
+    # The server returns 404 when parking lot is not found
+    assert r.status_code == 404
 
 
 def wait_for_server(url, max_attempts=10, delay=2):
