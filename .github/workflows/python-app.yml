@@ -26,36 +26,58 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest requests
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Start API server
+
+      - name: Create necessary directories and files
         run: |
-          nohup python Code/Parking-api/api/server.py &
-          sleep 5  # Wait for server to start
-
-      
-
+          mkdir -p data/pdata
+          # Create minimal required data files if they don't exist
+          echo '[]' > data/users.json
+          echo '{}' > data/vehicles.json
+          echo '{}' > data/parking_lots.json
+          echo '[]' > data/reservations.json
+          echo '[]' > data/payments.json
+          echo '{}' > data/pdata/p1-sessions.json
+          
       - name: Start server in background
         run: |
-          nohup python Code/Parking-api/api/server.py > server.log 2>&1 &
-          sleep 3
-    
+          cd Code/Parking-api/api
+          nohup python server.py > server.log 2>&1 &
+          echo $! > server.pid
+          sleep 5
 
-      - name: Wait for API server
+      - name: Check if server is running
         run: |
+          echo "Checking server status..."
           for i in {1..10}; do
-            curl http://localhost:8000/
-            sleep 2
+            if curl -s http://localhost:8000/ > /dev/null; then
+              echo "Server is up!"
+              break
+            fi
+            echo "Waiting for server... Attempt $i"
+            sleep 3
           done
-  
+          
+          # Final check
+          if ! curl -s http://localhost:8000/ > /dev/null; then
+            echo "Server failed to start"
+            cat Code/Parking-api/api/server.log
+            exit 1
+          fi
+
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
       - name: Test with pytest
         run: |
-          pytest
-          
-          
+          cd Code/Parking-api/api
+          pytest test_profile.py test_parking_lots.py -v
+
       - name: Stop server
         if: always()
         run: |
-          pkill -f server.py || true
+          if [ -f Code/Parking-api/api/server.pid ]; then
+            kill $(cat Code/Parking-api/api/server.pid) 2>/dev/null || true
+          fi
+          pkill -f "python.*server.py" || true
