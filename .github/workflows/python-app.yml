@@ -71,7 +71,6 @@ jobs:
 
       - name: Test with pytest
         run: |
-          cd Code\Parking-api\api\Tests\integration\parking-lots
           pytest test_profile.py test_parking_lots.py -v
 
       - name: Stop server
