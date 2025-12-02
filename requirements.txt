@@ -1,0 +1,4 @@
+# requirements.txt
+requests>=2.25.0
+pytest>=7.0.0
+flake8>=5.0.0
