@@ -3,7 +3,7 @@ import requests
 import hashlib; 
 
 @pytest.fixture
-def api():
+def api(): 
     """Return base URL and headers for testing."""
     url = "http://localhost:8000"
     headers = {"Authorization": "abc123", "Content-Type": "application/json"}
