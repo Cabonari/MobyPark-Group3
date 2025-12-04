@@ -15,13 +15,15 @@ def api():
 def created_vehicle(api):
     """Create a vehicle for tests and return its license plate."""
     url, headers = api
+    license_key = "ABC123"
+    
+    # Remove any existing vehicle with this license plate
+    requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
+
+    # Create a new test vehicle
     data = {"name": "Tesla Model S", "license_plate": "ABC-123"}
     r = requests.post(f"{url}/vehicles", headers=headers, json=data)
     assert r.status_code == 201
-    yield "ABC-123"
-    license_key = "ABC-123"
-
-    requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
 
 
 def test_create_vehicle(api):
@@ -34,7 +36,8 @@ def test_create_vehicle(api):
     assert response_data["status"] == "Success"
     assert response_data["vehicle"]["name"] == "BMW X5"
 
-    requests.delete(f"{url}/vehicles/XYZ-789", headers=headers)
+    # Cleanup
+    requests.delete(f"{url}/vehicles/XYZ789", headers=headers)
 
 
 def test_create_vehicle_missing_field(api):
@@ -58,13 +61,13 @@ def test_get_vehicles(api, created_vehicle):
     assert r.status_code == 200
     vehicles = r.json()
     assert isinstance(vehicles, dict)
-    assert "76-KQQ-7" in vehicles
+    assert "ABC123" in vehicles
 
 
 def test_vehicle_entry(api, created_vehicle):
     """Test vehicle entry to parking lot."""
     url, headers = api
-    license_key = "ABC-123"
+    license_key = "ABC123"
     data = {"parkinglot": "lot123"}
     r = requests.post(f"{url}/vehicles/{license_key}/entry",
                       headers=headers, json=data)
@@ -87,7 +90,7 @@ def test_vehicle_entry_not_found(api):
 def test_get_vehicle_reservations(api, created_vehicle):
     """Test getting vehicle reservations."""
     url, headers = api
-    license_key = "ABC-123"
+    license_key = "ABC123"
     r = requests.get(
         f"{url}/vehicles/{license_key}/reservations", headers=headers)
     assert r.status_code == 200
@@ -98,7 +101,7 @@ def test_get_vehicle_reservations(api, created_vehicle):
 def test_get_vehicle_history(api, created_vehicle):
     """Test getting vehicle history."""
     url, headers = api
-    license_key = "ABC-123"
+    license_key = "ABC123"
     r = requests.get(f"{url}/vehicles/{license_key}/history", headers=headers)
     assert r.status_code == 200
     history = r.json()
@@ -108,7 +111,7 @@ def test_get_vehicle_history(api, created_vehicle):
 def test_delete_vehicle(api, created_vehicle):
     """Test deleting a vehicle."""
     url, headers = api
-    license_key = "ABC-123"
+    license_key = "ABC123"
     r = requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
     assert r.status_code == 200
     response_data = r.json()
