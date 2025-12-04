@@ -14,39 +14,64 @@ import storage_utils
 
 
 class TestLoadJson:
+    def load_json(filename):
+        try:
+            # Create directory if needed
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            
+            with open(filename, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return []  # Returns empty list for missing files
+        except Exception:
+            return []  # Returns empty list for other errors
     """Tests for load_json function with comprehensive edge cases."""
     
     def test_load_json_valid_file(self):
         """Valid JSON file should return correctly parsed data structure."""
-        test_data = {"users": [{"id": 1, "name": "John"}]}
+        test_data = {"users": [{
+        "id": "1",
+        "username": "cindy.leenders42",
+        "password": "6b37d1ec969838d29cb611deaff50a6b",
+        "name": "Cindy Leenders",
+        "email": "cindyleenders@upcmail.nl",
+        "phone": "+310792215694",
+        "role": "USER",
+        "created_at": "2017-10-06",
+        "birth_year": 1937,
+        "active": True}]}
         json_content = json.dumps(test_data)
         
         with patch("builtins.open", mock_open(read_data=json_content)):
-            result = storage_utils.load_json("test.json")
-            assert result == test_data
-    
+            with patch("os.makedirs") as mock_makedirs:
+                result = storage_utils.load_json("test.json")
+                assert result == test_data
+        
     def test_load_json_empty_file(self):
         """Empty JSON file should return empty structure."""
         empty_json = "{}"
         
         with patch("builtins.open", mock_open(read_data=empty_json)):
-            result = storage_utils.load_json("empty.json")
-            assert result == {}
-    
+            with patch("os.makedirs") as mock_makedirs:
+                result = storage_utils.load_json("empty.json")
+                assert result == {}
+
     def test_load_json_file_not_found(self):
         """FileNotFoundError should return empty list as fallback."""
         with patch("builtins.open", side_effect=FileNotFoundError):
-            result = storage_utils.load_json("nonexistent.json")
+            with patch("os.makedirs") as mock_makedirs:
+                result = storage_utils.load_json("nonexistent.json")
         
         assert result == []
-    
+
     def test_load_json_invalid_json(self):
         """Malformed JSON content should raise JSONDecodeError."""
         invalid_json = "{'invalid': json}"  # Single quotes break JSON parsing
         
         with patch("builtins.open", mock_open(read_data=invalid_json)):
-            with pytest.raises(json.JSONDecodeError):
-                storage_utils.load_json("invalid.json")
+            with patch("os.makedirs") as mock_makedirs:
+                with pytest.raises(json.JSONDecodeError):
+                    storage_utils.load_json("invalid.json")
 
 
 class TestWriteJson:
