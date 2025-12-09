@@ -30,9 +30,9 @@ def test_create_vehicle(api):
     url, headers = api
 
     license_plate = "XYZ-789"
-    license_key = "XYZ789"  # MUST match server normalization
+    license_key = "XYZ789"  
 
-    # ✅ Ensure clean state before test
+
     requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
 
     data = {"name": "BMW X5", "license_plate": license_plate}
@@ -44,7 +44,7 @@ def test_create_vehicle(api):
     assert response_data["vehicle"]["name"] == "BMW X5"
     assert response_data["vehicle"]["license_plate"] == "XYZ-789"
 
-    # ✅ Correct cleanup
+
     requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
 
 
