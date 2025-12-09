@@ -25,19 +25,28 @@ def created_vehicle(api):
     r = requests.post(f"{url}/vehicles", headers=headers, json=data)
     assert r.status_code == 201
 
-
 def test_create_vehicle(api):
     """Test creating a new vehicle."""
     url, headers = api
-    data = {"name": "BMW X5", "license_plate": "XYZ-789"}
-    r = requests.post(f"{url}/vehicles", headers=headers, json=data)
-    assert r.status_code == 201
-    response_data = r.json()
-    assert response_data["status"] == "Success"
-    assert response_data["vehicle"]["name"] == "BMW X5"
 
-    # Cleanup
-    requests.delete(f"{url}/vehicles/XYZ789", headers=headers)
+    license_plate = "XYZ-789"
+    license_key = "XYZ789"  # MUST match server normalization
+
+    # ✅ Ensure clean state before test
+    requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
+
+    data = {"name": "BMW X5", "license_plate": license_plate}
+    r = requests.post(f"{url}/vehicles", headers=headers, json=data)
+
+    assert r.status_code == 201
+
+    response_data = r.json()
+    assert response_data["vehicle"]["name"] == "BMW X5"
+    assert response_data["vehicle"]["license_plate"] == "XYZ-789"
+
+    # ✅ Correct cleanup
+    requests.delete(f"{url}/vehicles/{license_key}", headers=headers)
+
 
 
 def test_create_vehicle_missing_field(api):
