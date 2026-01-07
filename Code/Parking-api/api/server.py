@@ -9,6 +9,8 @@ import session_calculator as sc
 import logging
 import os
 from logging.handlers import RotatingFileHandler
+import threading
+import time
 
 os.makedirs("logs", exist_ok=True)
 
@@ -1220,8 +1222,20 @@ def log_search_ui():
     print(f"Found {len(results)} results.")
 
 
-log_search_ui()
+def run_server():
+    server = HTTPServer(('localhost', 8000), RequestHandler)
+    print("Server running on http://localhost:8000")
+    server.serve_forever()
 
-server = HTTPServer(('localhost', 8000), RequestHandler)
-print("Server running on http://localhost:8000")
-server.serve_forever()
+
+def start_server_thread():
+    t = threading.Thread(target=run_server, daemon=True)
+    t.start()
+
+
+if __name__ == "__main__":
+    start_server_thread()
+
+    while True:
+        time.sleep(1)
+        log_search_ui()
