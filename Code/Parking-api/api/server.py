@@ -1234,8 +1234,12 @@ def start_server_thread():
 
 
 if __name__ == "__main__":
-    start_server_thread()
+    import sys
 
-    while True:
-        time.sleep(1)
-        log_search_ui()
+    if "--logs" in sys.argv:
+        # Interactive log search mode (local dev only)
+        while True:
+            log_search_ui()
+    else:
+        # Normal server mode (CI / production)
+        run_server()
