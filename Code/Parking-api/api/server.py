@@ -1172,6 +1172,56 @@ class RequestHandler(BaseHTTPRequestHandler):
                 return
 
 
+def search_logs(level=None, path=None, method=None, text=None, limit=100):
+    results = []
+
+    with open("logs/api.log", "r") as f:
+        for line in reversed(f.readlines()):
+            try:
+                log = json.loads(line)
+
+                if level and log["level"] != level:
+                    continue
+                if path and log["path"] != path:
+                    continue
+                if method and log["method"] != method:
+                    continue
+                if text and text not in log["message"]:
+                    continue
+
+                results.append(log)
+                if len(results) >= limit:
+                    break
+            except json.JSONDecodeError:
+                continue
+
+    return results
+
+
+def log_search_ui():
+    print("Log Search")
+    level = input("Level (or leave blank): ")
+    path = input("Path (or leave blank): ")
+    method = input("Method (or leave blank): ")
+    text = input("Text (or leave blank): ")
+    limit = input("Limit (default 100): ")
+    limit = int(limit) if limit.isnumeric() else 100
+
+    results = search_logs(
+        level=level if level else None,
+        path=path if path else None,
+        method=method if method else None,
+        text=text if text else None,
+        limit=limit
+    )
+
+    for log in results:
+        print(json.dumps(log, indent=4))
+    print(f"Found {len(results)} results.")
+
+
+log_search_ui()
+
 server = HTTPServer(('localhost', 8000), RequestHandler)
 print("Server running on http://localhost:8000")
 server.serve_forever()
