@@ -35,7 +35,7 @@ def create_tables():
         processed_by TEXT,        -- present for refunds
         coupled_to TEXT,          -- present for refunds
         created_at TEXT NOT NULL,
-        completed INTEGER DEFAULT 0,
+        completedAt TEXT,
         hash TEXT
     );
     """
