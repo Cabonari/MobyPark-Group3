@@ -40,6 +40,21 @@ data/payments.json
 data/pdata/p1-sessions.json
 
 .....
+
+
+
+Swagger opstarten: 
+
+cd code 
+cd parking-api 
+cd api 
+cd swagger 
+
+in /swagger: python -m http.server 8000
+
+Daarna in der browser: http://localhost:8000/index.html
+
+
 Voor het openen van de log dashboard:
 LET OP: Alleen vanaf de root van het project 
 In de terminal:
