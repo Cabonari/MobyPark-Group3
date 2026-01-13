@@ -36,11 +36,9 @@ def auth_headers():
 
 
 @pytest.fixture
-def api():
-    """Return base URL and headers for testing."""
-    url = "http://localhost:8000"
-    headers = {"Authorization": "abc123", "Content-Type": "application/json"}
-    return url, headers
+def api(auth_headers):
+    """Return base URL and authenticated headers."""
+    return BASE_URL, auth_headers
 
 
 # @pytest.fixture
