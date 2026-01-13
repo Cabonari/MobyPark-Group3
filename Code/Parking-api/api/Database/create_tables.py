@@ -24,6 +24,26 @@ def create_tables():
     """
     )
 
+    # duplicate Parking Lots
+    cur.execute(
+        """
+    CREATE TABLE IF NOT EXISTS duplicate_parking_lots (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        location TEXT,
+        address TEXT,
+        capacity INTEGER,
+        reserved INTEGER,
+        tariff REAL,
+        daytariff REAL,
+        created_at TEXT,
+        lat REAL,
+        lng REAL
+    );
+    """
+    )
+    
+
     # Payments
     cur.execute(
         """
@@ -93,6 +113,22 @@ def create_tables():
     );
     """
     )
+    # duplicate Vehicles
+    cur.execute(
+        """
+    CREATE TABLE IF NOT EXISTS duplicate_vehicles (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        license_plate TEXT NOT NULL,
+        make TEXT,
+        model TEXT,
+        color TEXT,
+        year INTEGER,
+        created_at TEXT
+    );
+    """
+    )
+
 
     # Reservations
     cur.execute(

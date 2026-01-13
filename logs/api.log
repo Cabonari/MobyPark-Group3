@@ -1,0 +1,84 @@
+{"timestamp": "2026-01-05T15:36:22.702963", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:24.774540", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:26.812195", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:28.858480", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:30.887421", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:32.930433", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "PUT", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:34.948465", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:36.992973", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:39.036364", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:41.076008", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:43.123027", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:45.166681", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/10", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:47.196278", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/999", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:51.278479", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:53.313116", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:55.341955", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:57.368071", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "PUT", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:36:59.408147", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:01.428464", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "PUT", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:03.467069", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:03.469160", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:05.504254", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/XYZ789", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:07.549938", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:09.571809", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/XYZ789", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:11.674778", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:13.700092", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:15.730055", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:19.811100", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:21.843919", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:23.884202", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:25.920445", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/NOTFOUND/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:27.963766", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:30.010106", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:34.097083", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:36.122992", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:40.206298", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:42.247174", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:44.289317", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:48.384042", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:48.384042", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:50.424492", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-05T15:37:50.424492", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:39.447888", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:41.488098", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:43.530924", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:45.563509", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:47.600443", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:49.634005", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "PUT", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:51.667501", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:53.707368", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:55.733672", "level": "INFO", "message": "parking lots endpoint called", "path": "/parking-lots", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:57.773816", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:41:59.811420", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:01.849021", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/11", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:03.876933", "level": "INFO", "message": "Parking lots endpoint called", "path": "/parking-lots/999", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:07.946753", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:09.986930", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:12.028288", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:14.063364", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "PUT", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:16.094975", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:18.113404", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "PUT", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:20.150060", "level": "INFO", "message": "Profile endpoint called", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:20.150060", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/profile", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:22.208021", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/XYZ789", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:24.275524", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:26.316369", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/XYZ789", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:28.364672", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:30.396151", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:32.440329", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:36.541037", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:38.572345", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:40.624633", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:42.666427", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/NOTFOUND/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:44.701024", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:46.736624", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:50.804531", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:52.830261", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:56.910047", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:42:58.935480", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:43:00.964506", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123", "method": "DELETE", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:43:05.037657", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:43:05.037657", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:43:07.063403", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-07T14:43:07.063403", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
