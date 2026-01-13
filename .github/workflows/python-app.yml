@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "main", CI/CD-pipeline ]
+    branches: [ "main", CI/CD-pipeline, session-token ]
   pull_request:
-    branches: [ "main", CI/CD-pipeline ]
+    branches: [ "main", CI/CD-pipeline, session-token ]
 
 permissions:
   contents: read
@@ -39,11 +39,14 @@ jobs:
           echo '{}' > data/pdata/p1-sessions.json
           
       - name: Start server in background
+        env:
+          ENV: test
         run: |
           cd Code/Parking-api/api
           nohup python server.py > server.log 2>&1 &
           echo $! > server.pid
           sleep 5
+
 
       - name: Check if server is running
         run: |

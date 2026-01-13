@@ -11,9 +11,17 @@ import os
 from logging.handlers import RotatingFileHandler
 import threading
 import time
+from session_manager import add_session
+
 
 os.makedirs("logs", exist_ok=True)
 
+
+if os.getenv("ENV") == "test":
+    add_session(
+        "abc123",
+        {"username": "testuser", "role": "ADMIN"}
+    )
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
