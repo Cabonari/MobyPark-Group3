@@ -11,9 +11,11 @@ import os
 from logging.handlers import RotatingFileHandler
 import threading
 import time
+from session_manager import add_session
+
 
 os.makedirs("logs", exist_ok=True)
-from api.session_manager import add_session
+
 
 if os.getenv("ENV") == "test":
     add_session(
