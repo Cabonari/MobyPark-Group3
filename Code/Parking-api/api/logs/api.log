@@ -246,3 +246,6 @@
 {"timestamp": "2026-01-13T12:49:00.269182", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/vehicles", "method": "POST", "ip": "127.0.0.1"}
 {"timestamp": "2026-01-13T12:49:02.322136", "level": "INFO", "message": "Vehicles endpoint called", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
 {"timestamp": "2026-01-13T12:49:02.323264", "level": "WARNING", "message": "Unauthorized access attempt", "path": "/vehicles/ABC123/entry", "method": "POST", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-13T12:55:56.417143", "level": "INFO", "message": "Payments endpoint called", "path": "/payments", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-13T13:00:40.281331", "level": "INFO", "message": "Payments endpoint called", "path": "/payments", "method": "GET", "ip": "127.0.0.1"}
+{"timestamp": "2026-01-13T13:00:46.074508", "level": "INFO", "message": "Payments endpoint called", "path": "/payments", "method": "GET", "ip": "127.0.0.1"}
