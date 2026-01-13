@@ -55,3 +55,10 @@ in /swagger: python -m http.server 8000
 Daarna in der browser: http://localhost:8000/index.html
 
 
+Voor het openen van de log dashboard:
+LET OP: Alleen vanaf de root van het project 
+In de terminal:
+python Code\Parking-api\api\server.py --logs
+
+Dit moet los van de server draaien.
+Kan ook tegelijk met de server draaien in een andere terminal.
