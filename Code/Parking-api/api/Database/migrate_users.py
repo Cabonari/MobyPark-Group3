@@ -295,31 +295,5 @@ def main():
     store_duplicate_users(all_duplicates)
 
 
-# def main():
-#     users = load_users()
-
-#     print("=== VALIDATING DATA ===")
-
-#     full_dup = find_duplicates_full(users)
-#     print(f"Full-record duplicates found: {len(full_dup)}")
-
-#     errorsFound = 0
-#     for i, user in enumerate(users):
-#         field_errors = validate_user_fields(user)
-#         if field_errors:
-#             errorsFound += 1
-#             print(f"User index {i}, username {user.get('username')}: {field_errors}")
-
-#     id_errors = validate_user_ids(users)
-#     for err in id_errors:
-#         print(err)
-
-#     print(f"Field errors: {errorsFound}")
-#     print(f"ID errors: {len(id_errors)}")
-
-#     insert_users_into_db(users)
-#     store_duplicate_users(full_dup)
-
-
 if __name__ == "__main__":
     main()

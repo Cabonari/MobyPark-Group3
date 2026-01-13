@@ -49,14 +49,19 @@ def create_tables():
         """
     CREATE TABLE IF NOT EXISTS payments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        "transaction" TEXT NOT NULL,
+
+        "transaction" TEXT NOT NULL UNIQUE,
         amount REAL NOT NULL,
-        initiator TEXT,           -- present for normal payments
-        processed_by TEXT,        -- present for refunds
-        coupled_to TEXT,          -- present for refunds
+
+        initiator TEXT,        -- user who created the payment
+        processed_by TEXT,     -- admin who processed refund (nullable)
+        coupled_to TEXT,       -- transaction id this refund belongs to (nullable)
+
         created_at TEXT NOT NULL,
-        completed INTEGER DEFAULT 0,
-        hash TEXT
+        completed TEXT,        -- NULL = not completed, otherwise datetime string
+
+        validation_hash TEXT NOT NULL,
+        t_data TEXT            -- JSON stored as TEXT
     );
     """
     )
