@@ -13,7 +13,13 @@ import threading
 import time
 
 os.makedirs("logs", exist_ok=True)
+from api.session_manager import add_session
 
+if os.getenv("ENV") == "test":
+    add_session(
+        "abc123",
+        {"username": "testuser", "role": "ADMIN"}
+    )
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
