@@ -40,3 +40,18 @@ data/payments.json
 data/pdata/p1-sessions.json
 
 .....
+
+
+
+Swagger opstarten: 
+
+cd code 
+cd parking-api 
+cd api 
+cd swagger 
+
+in /swagger: python -m http.server 8000
+
+Daarna in der browser: http://localhost:8000/index.html
+
+
