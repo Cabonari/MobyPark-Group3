@@ -1,2 +1,14 @@
 # Exclude the data folder
-Code/Parking-api/api/data
+*.json
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore log files
+*.log
+
+# Ignore virtual environments
+venv/
+env/
