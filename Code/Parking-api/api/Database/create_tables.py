@@ -42,7 +42,6 @@ def create_tables():
     );
     """
     )
-    
 
     # Payments
     cur.execute(
@@ -61,7 +60,9 @@ def create_tables():
         completed TEXT,        -- NULL = not completed, otherwise datetime string
 
         validation_hash TEXT NOT NULL,
-        t_data TEXT            -- JSON stored as TEXT
+        t_data TEXT,           -- JSON stored as TEXT
+        session_id TEXT,
+        parking_lot_id TEXT
     );
     """
     )
@@ -133,7 +134,6 @@ def create_tables():
     );
     """
     )
-
 
     # Reservations
     cur.execute(
