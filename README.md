@@ -29,7 +29,7 @@ Klik op de "Testing" Icoon links
 om de resultaten te bekijken. 
 
 benodigde installaties (met pip install):
-flake8 pytest requests
+flake8 pytest requests pytest-mock
 
 benodigde file voor het runnen van tests en code(mkdir -p data/pdata eerst uitvoeren):
 data/users.json
