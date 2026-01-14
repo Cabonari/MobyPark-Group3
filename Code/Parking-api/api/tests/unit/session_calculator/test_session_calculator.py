@@ -8,7 +8,7 @@ from hashlib import md5
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
-from api.session_calculator import calculate_price, generate_payment_hash, generate_transaction_validation_hash, check_payment_amount
+from session_calculator import calculate_price, generate_payment_hash, generate_transaction_validation_hash, check_payment_amount
 
 def load_payment_data():
     return []
@@ -67,7 +67,7 @@ def test_calculate_price_no_stop_time(mocker):
     data = {
         "started": "01-01-2023 10:00:00"
     }
-    mock_now = mocker.patch('api.session_calculator.datetime')
+    mock_now = mocker.patch('session_calculator.datetime')
     mock_now.now.return_value = datetime(2023, 1, 1, 12, 0, 0)
     mock_now.strptime = datetime.strptime
     price, hours, days = calculate_price(parkinglot, sid, data)
@@ -94,7 +94,7 @@ def test_check_payment_amount(mocker):
         {"transaction": "hash1", "amount": 5.0},
         {"transaction": "hash3", "amount": 15.0}
     ]
-    mocker.patch('api.session_calculator.load_payment_data', return_value=mock_payments)
+    mocker.patch('session_calculator.load_payment_data', return_value=mock_payments)
     total = check_payment_amount("hash1")
     assert total == 15.0
 
@@ -103,6 +103,6 @@ def test_check_payment_amount_no_match(mocker):
         {"transaction": "hash2", "amount": 20.0},
         {"transaction": "hash3", "amount": 15.0}
     ]
-    mocker.patch('api.session_calculator.load_payment_data', return_value=mock_payments)
+    mocker.patch('session_calculator.load_payment_data', return_value=mock_payments)
     total = check_payment_amount("hash1")
     assert total == 0
