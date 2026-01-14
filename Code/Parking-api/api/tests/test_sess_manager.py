@@ -6,7 +6,7 @@ import pytest
 # Add the project root so Python can find the api module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
-from api.session_manager import add_session, remove_session, get_session, sessions
+from session_manager import add_session, remove_session, get_session, sessions
 
 # Clear sessions before each test
 def setup_function():
