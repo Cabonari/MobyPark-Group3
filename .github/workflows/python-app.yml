@@ -24,8 +24,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest requests mocker
+          pip install flake8 pytest pytest-mock requests
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
 
       - name: Create necessary directories and files
         run: |
