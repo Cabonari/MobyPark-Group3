@@ -154,6 +154,22 @@ def create_tables():
     );
     """
     )
+    # duplicate Reservations
+    cur.execute(
+        """
+    CREATE TABLE IF NOT EXISTS duplicate_reservations (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        parking_lot_id INTEGER,
+        vehicle_id INTEGER,
+        start_time TEXT,
+        end_time TEXT,
+        status TEXT,
+        created_at TEXT,
+        cost REAL
+    );
+    """
+    )
 
     conn.commit()
     conn.close()
