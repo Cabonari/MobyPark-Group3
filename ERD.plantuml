@@ -1,0 +1,191 @@
+@startuml
+
+entity Company {
+  * **company_id** : INTEGER <<PK>>
+  --
+  company_name : TEXT NOT NULL
+  registration_number :  TEXT UNIQUE
+  address : TEXT
+}
+
+entity Hotel {
+  * **hotel_id** : INTEGER <<PK>>
+  --
+  hotel_name : TEXT NOT NULL
+  address : TEXT
+  contact_info : TEXT
+}
+
+entity User {
+  * **user_id** : INTEGER <<PK>>
+  --
+  username : TEXT NOT NULL UNIQUE
+  email :  TEXT UNIQUE NOT NULL
+  password_hash : TEXT NOT NULL
+  name : TEXT
+  role : TEXT DEFAULT 'USER'
+  phone : TEXT
+  birth_year :  INTEGER
+  active : INTEGER DEFAULT 1
+  + company_id : INTEGER <<FK>> [nullable]
+}
+
+entity Vehicle {
+  * **vehicle_id** : INTEGER <<PK>>
+  --
+  + user_id : INTEGER <<FK>>
+  license_plate : TEXT UNIQUE NOT NULL
+  vehicle_type : TEXT
+  vehicle_name : TEXT
+  make : TEXT
+  model : TEXT
+  color : TEXT
+  year : INTEGER
+}
+
+entity ParkingSpot {
+  * **parking_spot_id** : INTEGER <<PK>>
+  --
+  name : TEXT
+  location : TEXT NOT NULL
+  address : TEXT
+  rate : REAL NOT NULL
+  day_tariff : REAL
+  capacity : INTEGER
+  reserved :  INTEGER DEFAULT 0
+  latitude :  REAL
+  longitude : REAL
+  status : TEXT DEFAULT 'AVAILABLE'
+  + hotel_id : INTEGER <<FK>> [nullable]
+}
+
+entity ParkingSession {
+  * **session_id** : INTEGER <<PK>>
+  --
+  + user_id : INTEGER <<FK>>
+  + vehicle_id : INTEGER <<FK>>
+  + parking_spot_id : INTEGER <<FK>>
+  + reservation_id : INTEGER <<FK>> [nullable]
+  start_time : TEXT NOT NULL
+  end_time : TEXT [nullable]
+  total_cost : REAL DEFAULT 0.00
+  status :  TEXT DEFAULT 'ACTIVE'
+}
+
+entity Payment {
+  * **payment_id** : INTEGER <<PK>>
+  --
+  + session_id : INTEGER <<FK>> [nullable]
+  + user_id : INTEGER <<FK>>
+  transaction_hash : TEXT UNIQUE
+  amount : REAL NOT NULL
+  payment_method : TEXT
+  initiator : TEXT
+  issuer : TEXT
+  bank : TEXT
+  validation_hash : TEXT
+  payment_date : TEXT DEFAULT CURRENT_TIMESTAMP
+  completed_at : TEXT
+  status : TEXT DEFAULT 'PENDING'
+  type : TEXT
+}
+
+entity Reservation {
+  * **reservation_id** : INTEGER <<PK>>
+  --
+  + user_id : INTEGER <<FK>>
+  + vehicle_id : INTEGER <<FK>>
+  + parking_spot_id : INTEGER <<FK>>
+  + discount_id : INTEGER <<FK>> [nullable]
+  start_date : TEXT NOT NULL
+  end_date : TEXT NOT NULL
+  cost : REAL
+  status :  TEXT DEFAULT 'ACTIVE'
+}
+
+entity Discount {
+  * **discount_id** : INTEGER <<PK>>
+  --
+  + hotel_id : INTEGER <<FK>> [nullable]
+  + company_id : INTEGER <<FK>> [nullable]
+  type : TEXT
+  value : REAL
+  is_active : INTEGER DEFAULT 1
+  valid_from : TEXT
+  valid_until : TEXT
+}
+
+Company ||--o{ User : "1:N"
+Company ||--o{ Discount : "1:N"
+Hotel ||--o{ ParkingSpot : "1:N"
+Hotel ||--o{ Discount : "1:N"
+User ||--o{ Vehicle :  "1:N"
+User ||--o{ ParkingSession :  "1:N"
+User ||--o{ Reservation : "1:N"
+User ||--o{ Payment : "1:N"
+Vehicle ||--o{ ParkingSession : "1:N"
+Vehicle ||--o{ Reservation : "1:N"
+ParkingSpot ||--o{ ParkingSession : "1:N"
+ParkingSpot ||--o{ Reservation : "1:N"
+ParkingSession ||--o{ Payment : "1:N"
+ParkingSession ||--o| Reservation : "0.. 1:1"
+Reservation ||--o| Discount : "N:0..1"
+
+note right of User
+  **US 1.2:** Bedrijven ondersteuning
+  • company_id NULL = privé gebruiker (max 1 voertuig)
+  • company_id NOT NULL = bedrijfsgebruiker (max 5 voertuigen)
+  
+  **Role:** 'USER' of 'ADMIN'
+  **Active:** 0 = inactive, 1 = active
+end note
+
+note right of ParkingSpot
+  **US 1.3:** Hotel parkeren
+  • Als hotel_id NOT NULL → rate MOET 0.00 zijn
+  
+  **Status:** 'AVAILABLE', 'FULL', 'CLOSED'
+  **GPS:** latitude/longitude voor kaartweergave
+  **Capacity:** Real-time beschikbaarheid tracking
+end note
+
+note right of ParkingSession
+  **US 1.4:** Maandoverzicht data
+  Query op start_time voor kostenrapportage
+  
+  **Status:** 'ACTIVE', 'COMPLETED', 'CANCELLED'
+  **Dates:** Format 'YYYY-MM-DD HH:MM:SS'
+  **Reservation_id:** NULL voor walk-in parkeren
+end note
+
+note right of Payment
+  **Status:** 'PENDING', 'COMPLETED', 'REFUNDED', 'FAILED'
+  **Type:** 'CHARGE', 'REFUND'
+  **Dates:** Format 'YYYY-MM-DD HH:MM: SS'
+  
+  **session_id:** NULL toegestaan voor standalone refunds
+  **transaction_hash:** Unieke identifier voor koppeling met bestaande code
+end note
+
+note right of Vehicle
+  **vehicle_type:** 'car', 'motorcycle', 'van', 'truck', 'bus'
+end note
+
+note right of Reservation
+  **Status:** 'ACTIVE', 'COMPLETED', 'CANCELLED'
+  **Dates:** Format 'YYYY-MM-DD'
+  **discount_id:** Optionele korting toepassen
+end note
+
+note right of Discount
+  **Type:** 'PERCENTAGE', 'FIXED_AMOUNT'
+  **is_active:** 0 = inactive, 1 = active
+  **Dates:** Format 'YYYY-MM-DD'
+  
+  **Koppeling:**
+  • hotel_id:  Korting voor specifiek hotel
+  • company_id: Zakelijke korting voor bedrijf
+  • Beide NULL: Algemene actie
+end note
+
+@enduml
