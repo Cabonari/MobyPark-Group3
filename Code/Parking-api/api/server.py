@@ -12,7 +12,7 @@ from logging.handlers import RotatingFileHandler
 import threading
 import time
 from session_manager import add_session
-
+#!/usr/bin/env python3
 
 os.makedirs("logs", exist_ok=True)
 
