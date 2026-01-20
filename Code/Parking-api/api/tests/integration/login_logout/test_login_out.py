@@ -1,3 +1,4 @@
+import os
 import pytest
 import requests
 import time
@@ -28,9 +29,10 @@ def auth_api():
 @pytest.fixture
 def logged_in_user(auth_api):
     url, headers = auth_api
+    password = os.getenv("TEST_USER_PASSWORD", "test")  # Default to "test" locally
     data = {
         "username": "testuser",
-        "password": "test"
+        "password": password
     }
 
     r = requests.post(f"{url}/login", json=data, headers=headers)
@@ -48,9 +50,10 @@ def logged_in_user(auth_api):
 
 def test_login_success(auth_api):
     url, headers = auth_api
+    password = os.getenv("TEST_USER_PASSWORD", "test")  # Default to "test" locally
     data = {
         "username": "testuser",
-        "password": "test" 
+        "password": password
     }
 
     r = requests.post(f"{url}/login", json=data, headers=headers)
@@ -78,6 +81,7 @@ def test_login_invalid_credentials(auth_api):
 def test_logout_success(auth_api, logged_in_user):
     url, _ = auth_api
 
+    # 1️⃣ Call logout with valid token
     r = requests.get(
         f"{url}/logout",
         headers={"Authorization": f"Bearer {logged_in_user}"}
@@ -85,6 +89,7 @@ def test_logout_success(auth_api, logged_in_user):
     assert r.status_code == 200
     assert r.json().get("message") == "User logged out"
 
+    # 2️⃣ Call logout again with same token → should fail
     r2 = requests.get(
         f"{url}/logout",
         headers={"Authorization": f"Bearer {logged_in_user}"}
