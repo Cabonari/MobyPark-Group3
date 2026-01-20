@@ -1,0 +1,38 @@
+openapi: 3.0.3
+info:
+  title: Mijn Eerste API
+  description: Dit is een voorbeeld-API om Swagger UI te testen.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000 
+paths:
+  /hello:
+    get:
+      summary: Zegt hallo
+      description: Een test endpoint dat een hallo-bericht teruggeeft.
+      responses:
+        '200':
+          description: Succesvolle response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Hallo wereld!"
+  /goodbye:
+    get:
+      summary: Zegt vaarwel
+      description: Een test endpoint dat een vaarwel-bericht teruggeeft.
+      responses:
+        '200':
+          description: Succesvolle response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Tot ziens!"
