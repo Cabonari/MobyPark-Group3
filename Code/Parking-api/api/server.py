@@ -118,14 +118,12 @@ class RequestHandler(BaseHTTPRequestHandler):
             hashed_password = hashlib.md5(password.encode()).hexdigest()
             users = load_json('data/users.json')
 
-            # Wrap single user dict as a list to handle single-user JSON
             if isinstance(users, dict):
                 users = [users]
 
-            # Find matching user
             for user in users:
                 if not isinstance(user, dict):
-                    continue  # skip invalid entries
+                    continue
                 if user.get("username") == username and user.get("password") == hashed_password:
                     token = str(uuid.uuid4())
                     add_session(token, user)
@@ -137,7 +135,6 @@ class RequestHandler(BaseHTTPRequestHandler):
                     ).encode('utf-8'))
                     return
 
-            # No match found
             self.send_response(401)
             self.send_header("Content-type", "application/json")
             self.end_headers()
@@ -929,9 +926,6 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'{"error": "Server error"}')
                 log_request(self, f"Logout error: {e}", logging.ERROR)
-
-
-
 
 
         elif self.path.startswith("/parking-lots/"):
