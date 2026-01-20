@@ -89,9 +89,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         if self.path == "/register":
             log_request(self, "Register endpoint called")
 
+            # Read body safely
             length = int(self.headers.get("Content-Length", 0))
-            raw_body = self.rfile.read(length) if length > 0 else b"{}"
-            data = json.loads(raw_body)
+            try:
+                raw_body = self.rfile.read(length) if length > 0 else b"{}"
+                data = json.loads(raw_body)
+            except json.JSONDecodeError:
+                self.send_response(400)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Invalid JSON"}).encode("utf-8"))
+                return
 
             username = data.get("username")
             password = data.get("password")
@@ -106,11 +114,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                 )
                 return
 
-            hashed_password = hashlib.md5(password.encode()).hexdigest()
-            users = load_json("data/users.json")
+            # Load users safely
+            users = load_json("data/users.json") or []
+            if not isinstance(users, list):
+                users = []
 
             for user in users:
-                if username == user["username"]:
+                if username == user.get("username"):
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
@@ -121,6 +131,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                     )
                     return
 
+            # Append new user
+            hashed_password = hashlib.md5(password.encode()).hexdigest()
             users.append(
                 {"username": username, "password": hashed_password, "name": name}
             )
@@ -139,8 +151,15 @@ class RequestHandler(BaseHTTPRequestHandler):
             log_request(self, "Login endpoint called")
 
             length = int(self.headers.get("Content-Length", 0))
-            raw_body = self.rfile.read(length) if length > 0 else b"{}"
-            data = json.loads(raw_body)
+            try:
+                raw_body = self.rfile.read(length) if length > 0 else b"{}"
+                data = json.loads(raw_body)
+            except json.JSONDecodeError:
+                self.send_response(400)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Invalid JSON"}).encode("utf-8"))
+                return
 
             username = data.get("username")
             password = data.get("password")
@@ -154,10 +173,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                 )
                 return
 
-            hashed_password = hashlib.md5(password.encode()).hexdigest()
-            users = load_json("data/users.json")
+            # Load users safely
+            users = load_json("data/users.json") or []
+            if not isinstance(users, list):
+                users = []
 
-            # Check all users
+            hashed_password = hashlib.md5(password.encode()).hexdigest()
             for user in users:
                 if (
                     user.get("username") == username
@@ -165,6 +186,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 ):
                     token = str(uuid.uuid4())
                     add_session(token, user)
+
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
@@ -175,7 +197,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                     )
                     return
 
-            # If no user matches
+            # No matching user found
             self.send_response(401)
             self.send_header("Content-type", "application/json")
             self.end_headers()
