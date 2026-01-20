@@ -657,7 +657,18 @@ class RequestHandler(BaseHTTPRequestHandler):
             session_user = get_session(token)
             data = json.loads(self.rfile.read(
                 int(self.headers.get("Content-Length", -1))))
-            payment = next(p for p in payments if p["transaction"] == pid)
+            payment = next(
+                (p for p in payments if p["transaction"] == pid),
+                None
+            )
+
+            if not payment:
+                self.send_response(404)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(b"Payment not found!")
+                return
+
             if payment:
                 for field in ["t_data", "validation"]:
                     if not field in data:
@@ -1029,16 +1040,19 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(
                     b"Unauthorized: Invalid or missing session token")
                 return
-            payments = []
+
             session_user = get_session(token)
-            for payment in load_payment_data():
-                if payment["username"] == session_user["username"]:
-                    payments.append(payment)
+            payments = [
+                p for p in load_payment_data()
+                if p.get("initiator") == session_user["username"]
+            ]
+
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.end_headers()
             self.wfile.write(json.dumps(payments).encode("utf-8"))
             return
+
 
         elif self.path.startswith("/payments/"):
             log_request(self, "Payments endpoint called")
