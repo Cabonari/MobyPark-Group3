@@ -138,19 +138,26 @@ class RequestHandler(BaseHTTPRequestHandler):
         elif self.path == "/login":
             log_request(self, "Login endpoint called")
 
-            data = json.loads(
-                self.rfile.read(int(self.headers.get("Content-Length", -1)))
-            )
+            length = int(self.headers.get("Content-Length", 0))
+            raw_body = self.rfile.read(length) if length > 0 else b"{}"
+            data = json.loads(raw_body)
+
             username = data.get("username")
             password = data.get("password")
+
             if not username or not password:
                 self.send_response(400)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
-                self.wfile.write(b"Missing credentials")
+                self.wfile.write(
+                    json.dumps({"error": "Missing credentials"}).encode("utf-8")
+                )
                 return
+
             hashed_password = hashlib.md5(password.encode()).hexdigest()
             users = load_json("data/users.json")
+
+            # Check all users
             for user in users:
                 if (
                     user.get("username") == username
@@ -167,18 +174,15 @@ class RequestHandler(BaseHTTPRequestHandler):
                         ).encode("utf-8")
                     )
                     return
-                else:
-                    self.send_response(401)
-                    self.send_header("Content-type", "application/json")
-                    self.end_headers()
-                    self.wfile.write(b"Invalid credentials")
-                    log_request(self, "Unauthorized access attempt", logging.WARNING)
 
-                    return
+            # If no user matches
             self.send_response(401)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            self.wfile.write(b"User not found")
+            self.wfile.write(
+                json.dumps({"error": "Invalid username or password"}).encode("utf-8")
+            )
+            log_request(self, "Unauthorized access attempt", logging.WARNING)
 
         elif self.path.startswith("/parking-lots"):
             log_request(self, "parking lots endpoint called")
