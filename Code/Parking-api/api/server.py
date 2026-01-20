@@ -90,22 +90,42 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b"User created")
 
+
         elif self.path == "/login":
             log_request(self, "Login endpoint called")
 
-            data = json.loads(self.rfile.read(
-                int(self.headers.get("Content-Length", -1))))
+            try:
+                data = json.loads(self.rfile.read(
+                    int(self.headers.get("Content-Length", -1))
+                ))
+            except json.JSONDecodeError:
+                self.send_response(400)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(b"Invalid JSON")
+                return
+
             username = data.get("username")
             password = data.get("password")
+
             if not username or not password:
                 self.send_response(400)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
                 self.wfile.write(b"Missing credentials")
                 return
+
             hashed_password = hashlib.md5(password.encode()).hexdigest()
             users = load_json('data/users.json')
+
+            # Wrap single user dict as a list to handle single-user JSON
+            if isinstance(users, dict):
+                users = [users]
+
+            # Find matching user
             for user in users:
+                if not isinstance(user, dict):
+                    continue  # skip invalid entries
                 if user.get("username") == username and user.get("password") == hashed_password:
                     token = str(uuid.uuid4())
                     add_session(token, user)
@@ -113,21 +133,18 @@ class RequestHandler(BaseHTTPRequestHandler):
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(
-                        {"message": "User logged in", "session_token": token}).encode('utf-8'))
+                        {"message": "User logged in", "session_token": token}
+                    ).encode('utf-8'))
                     return
-                else:
-                    self.send_response(401)
-                    self.send_header("Content-type", "application/json")
-                    self.end_headers()
-                    self.wfile.write(b"Invalid credentials")
-                    log_request(self, "Unauthorized access attempt",
-                                logging.WARNING)
 
-                    return
+            # No match found
             self.send_response(401)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            self.wfile.write(b"User not found")
+            self.wfile.write(b"Invalid credentials")
+            log_request(self, f"Unauthorized access attempt for username: {username}", logging.WARNING)
+
+
 
         elif self.path.startswith("/parking-lots"):
             log_request(self, "parking lots endpoint called")
@@ -845,7 +862,6 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 return
 
-            # Query parameters
             from urllib.parse import urlparse, parse_qs
             query = parse_qs(urlparse(self.path).query)
 
@@ -882,22 +898,41 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(results).encode("utf-8"))
             return
-
+        
         elif self.path == "/logout":
             log_request(self, "Logout endpoint called")
 
-            token = self.headers.get('Authorization')
-            if token and get_session(token):
-                remove_session(token)
-                self.send_response(200)
+            try:
+                auth_header = self.headers.get('Authorization')
+                token = None
+                if auth_header:
+                    if auth_header.startswith("Bearer "):
+                        token = auth_header.split(" ", 1)[1]
+                    else:
+                        token = auth_header
+
+                if token and get_session(token):
+                    remove_session(token)
+                    self.send_response(200)
+                    self.send_header("Content-type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(b'{"message": "User logged out"}')
+                else:
+                    self.send_response(400)
+                    self.send_header("Content-type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(b'{"error": "Invalid session token"}')
+
+            except Exception as e:
+                self.send_response(500)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
-                self.wfile.write(b"User logged out")
-                return
-            self.send_response(400)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
-            self.wfile.write(b"Invalid session token")
+                self.wfile.write(b'{"error": "Server error"}')
+                log_request(self, f"Logout error: {e}", logging.ERROR)
+
+
+
+
 
         elif self.path.startswith("/parking-lots/"):
             log_request(self, "Parking lots endpoint called")
