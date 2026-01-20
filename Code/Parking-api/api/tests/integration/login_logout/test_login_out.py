@@ -3,8 +3,6 @@ import requests
 import time
 from requests.exceptions import ConnectionError
 
-
-
 def wait_for_server(url, max_attempts=10, delay=2):
     """Wait for server to be available."""
     for _ in range(max_attempts):
@@ -17,23 +15,15 @@ def wait_for_server(url, max_attempts=10, delay=2):
         time.sleep(delay)
     return False
 
-
 @pytest.fixture(scope="session", autouse=True)
 def wait_for_api():
     assert wait_for_server("http://localhost:8000"), "Server not available"
-
-
 
 @pytest.fixture
 def auth_api():
     url = "http://localhost:8000"
     headers = {"Content-Type": "application/json"}
     return url, headers
-
-
-
-import pytest
-import requests
 
 @pytest.fixture
 def logged_in_user(auth_api):
@@ -51,19 +41,16 @@ def logged_in_user(auth_api):
 
     yield token
 
-    requests.post(
+    requests.get(
         f"{url}/logout",
         headers={"Authorization": f"Bearer {token}"}
     )
-
-
-
 
 def test_login_success(auth_api):
     url, headers = auth_api
     data = {
         "username": "testuser",
-        "password": "test"
+        "password": "test" 
     }
 
     r = requests.post(f"{url}/login", json=data, headers=headers)
@@ -72,14 +59,11 @@ def test_login_success(auth_api):
     assert "session_token" in response_data
     assert response_data["message"] == "User logged in"
 
-
-
 def test_login_missing_credentials(auth_api):
     url, headers = auth_api
 
     r = requests.post(f"{url}/login", json={}, headers=headers)
     assert r.status_code == 400
-
 
 def test_login_invalid_credentials(auth_api):
     url, headers = auth_api
@@ -90,7 +74,6 @@ def test_login_invalid_credentials(auth_api):
 
     r = requests.post(f"{url}/login", json=data, headers=headers)
     assert r.status_code == 401
-
 
 def test_logout_success(auth_api, logged_in_user):
     url, _ = auth_api
