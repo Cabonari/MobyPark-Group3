@@ -88,27 +88,52 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         if self.path == "/register":
             log_request(self, "Register endpoint called")
-            data = json.loads(
-                self.rfile.read(int(self.headers.get("Content-Length", -1)))
-            )
+
+            length = int(self.headers.get("Content-Length", 0))
+            raw_body = self.rfile.read(length) if length > 0 else b"{}"
+            data = json.loads(raw_body)
+
             username = data.get("username")
             password = data.get("password")
             name = data.get("name")
+
+            if not username or not password or not name:
+                self.send_response(400)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(
+                    json.dumps({"error": "Missing field(s)"}).encode("utf-8")
+                )
+                return
+
             hashed_password = hashlib.md5(password.encode()).hexdigest()
             users = load_json("data/users.json")
+
             for user in users:
                 if username == user["username"]:
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
-                    self.wfile.write(b"Username already taken")
+                    self.wfile.write(
+                        json.dumps(
+                            {"status": "error", "message": "Username already taken"}
+                        ).encode("utf-8")
+                    )
                     return
-            users.add({"username": username, "password": hashed_password, "name": name})
+
+            users.append(
+                {"username": username, "password": hashed_password, "name": name}
+            )
             save_user_data(users)
+
             self.send_response(201)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            self.wfile.write(b"User created")
+            self.wfile.write(
+                json.dumps({"status": "success", "message": "User created"}).encode(
+                    "utf-8"
+                )
+            )
 
         elif self.path == "/login":
             log_request(self, "Login endpoint called")
