@@ -1,0 +1,27 @@
+@startuml
+
+actor Client
+participant "API/Controller" as Controller
+participant "Helper/SessionCalculator" as Helper
+database "SQLite Database" as SQLiteDB
+
+Client -> Controller: GET /billing (of andere relevante endpoint)
+
+alt Authenticatie check
+    Controller -> Controller: Check Authorizatie header & token
+    Controller --> Client: 401 Unauthorized (indien ongeldig)
+else
+    Controller -> SQLiteDB: SELECT * FROM parking_lots
+    loop Per parkeerplaats
+        Controller -> SQLiteDB: SELECT * FROM sessions WHERE parking_lot_id=?
+        loop Per sessie van deze user
+            Controller -> Helper: calculate_price()
+            Controller -> Helper: generate_payment_hash()
+            Controller -> Helper: check_payment_amount()
+            Controller -> Controller: Bouw cost dictionary + append aan data lijst
+        end
+    end
+    Controller --> Client: HTTP 200 OK\n[JSON array van kosten]
+end
+
+@enduml
